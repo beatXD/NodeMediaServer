@@ -1,0 +1,13 @@
+# build
+node_modules
+dist/
+
+#env
+.env
+
+# lock
+yarn.lock
+package-lock.json
+
+# media
+media
