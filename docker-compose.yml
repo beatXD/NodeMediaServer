@@ -9,4 +9,6 @@ services:
       - 8443:8443
     volumes:
       - ./media:/src/app/media
+    env_file:
+      - .env
     restart: 'always'

@@ -18,6 +18,7 @@ RUN npm run build
 FROM node:alpine AS runner
 WORKDIR /src/app
 ENV NODE_ENV production
+COPY .env ./
 COPY --from=builder /src/app/dist ./dist
 COPY --from=builder /src/app/node_modules ./node_modules
 COPY --from=builder /src/app/package.json package.json
