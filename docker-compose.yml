@@ -2,10 +2,11 @@ version: '3'
 services:
   streaming:
     build: .
-    container_name: STREAMING
+    container_name: MEDIA_STREAMING
     ports:
       - 1935:1935
       - 8000:8000
+      - 8443:8443
     volumes:
       - ./media:/src/app/media
     restart: 'always'

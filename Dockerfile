@@ -1,29 +1,28 @@
-# BUILD
-FROM node:14.15.0-alpine3.10 as builder
-
-WORKDIR /usr/app/
-
-COPY package*.json ./
+# Install dependencies only when needed
+FROM node:alpine AS deps
+RUN apk add --update --no-cache libc6-compat --virtual builds-deps build-base py-pip
+WORKDIR /src/app
+COPY package.json ./
 COPY tsconfig.json ./
+RUN npm install --frozen-lockfile
 
-RUN npm install --silent
-
+# Rebuild the source code only when needed
+FROM node:alpine AS builder
+WORKDIR /src/app
+COPY tsconfig.json ./
 COPY . .
-
+COPY --from=deps /src/app/node_modules ./node_modules
 RUN npm run build
 
+# Production image, copy all the files and run
+FROM node:alpine AS runner
+WORKDIR /src/app
+ENV NODE_ENV production
+COPY --from=builder /src/app/dist ./dist
+COPY --from=builder /src/app/node_modules ./node_modules
+COPY --from=builder /src/app/package.json package.json
+COPY --from=builder /src/app/tsconfig.json tsconfig.json
 
-# RUN
-FROM node:14.15.0-alpine3.10
+EXPOSE 1935 8000 8443
 
-WORKDIR /usr/app/
-
-COPY package*.json ./
-
-RUN npm install
-
-COPY --from=builder /usr/app/dist ./dist
-
-EXPOSE 8000
-
-CMD ["npm","run", "dev"]
+CMD ["npm","start"]

@@ -1,6 +1,32 @@
 import NodeMediaServer from 'node-media-server'
-import path from 'path'
-import { configs } from '../src/configs/environment'
+import { configs } from './configs/environment'
+
+// const config = {
+//   rtmp: {
+//     port: configs.SERVER_STREAM,
+//     chunk_size: 60000,
+//     gop_cache: true,
+//     ping: 30,
+//     ping_timeout: 60
+//   },
+//   http: {
+//     port: configs.SERVER_MEDIA,
+//     mediaroot: './media',
+//     allow_origin: '*'
+//   },
+//   trans: {
+//     ffmpeg: path.join(__dirname, './libs/ffmpeg'),
+//     tasks: [
+//       {
+//         app: 'live',
+//         hls: true,
+//         hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
+//         dash: true,
+//         dashFlags: '[f=dash:window_size=3:extra_window_size=5]'
+//       }
+//     ]
+//   }
+// }
 
 const config = {
   rtmp: {
@@ -9,24 +35,32 @@ const config = {
     gop_cache: true,
     ping: 30,
     ping_timeout: 60
+    // ssl: {
+    //   port: 443,
+    //   key: __dirname+'/privatekey.pem',
+    //   cert: __dirname+'/certificate.pem',
+    // }
   },
   http: {
     port: configs.SERVER_MEDIA,
-    mediaroot: './media',
-    allow_origin: '*'
-  },
-  trans: {
-    ffmpeg: path.join(__dirname, './libs/ffmpeg'),
-    tasks: [
-      {
-        app: 'live',
-        hls: true,
-        hlsFlags: '[hls_time=2:hls_list_size=3:hls_flags=delete_segments]',
-        dash: true,
-        dashFlags: '[f=dash:window_size=3:extra_window_size=5]'
-      }
-    ]
+    mediaroot: __dirname + '/media',
+    webroot: __dirname + '/www',
+    allow_origin: '*',
+    api: true
   }
+  // https: {
+  //   port: argv.https_port,
+  //   key: __dirname+'/privatekey.pem',
+  //   cert: __dirname+'/certificate.pem',
+  // },
+  // auth: {
+  //   api: true,
+  //   api_user: 'admin',
+  //   api_pass: 'admin',
+  //   play: false,
+  //   publish: false,
+  //   secret: 'nodemedia2017privatekey'
+  // }
 }
 
 const nms = new NodeMediaServer(config)
